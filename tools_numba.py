@@ -1,5 +1,6 @@
 import time
 import random
+from numba import jit
 
 
 class TimeTool:
@@ -20,10 +21,15 @@ class ECalculator:
         self.a = 0
         self.n = 0
 
+    def value_e(self, nn):
+        (self.a, self.n) = self.value_e_static(nn)
+
     def get_e(self):
         return self.a / self.n
 
-    def value_e(self, nn):
+    @staticmethod
+    @jit(nopython=True, nogil=True)
+    def value_e_static(nn):
         a = 0.0
         for x in range(nn):
             s = 0
@@ -32,5 +38,4 @@ class ECalculator:
                 s += random.uniform(0, 1)
                 turn += 1
             a += turn
-        self.n = nn
-        self.a = a
+        return a, nn
